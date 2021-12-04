@@ -1,0 +1,122 @@
+#include<Servo.h>
+#include<Arduino.h>
+
+Servo servo1;
+ byte tut = 100 ; 
+
+unsigned int sure,mesafe;
+byte led_kirmizi1=12;
+byte led_kirmizi2=2;
+
+byte buzzer = 9 ; 
+ byte oge1 = 0 ;
+byte led_mavi1=7;
+byte led_mavi2=8;
+byte yakinlik = 0; 
+byte echo=3;
+byte trig=4;
+byte oncekiMesafe = 0 ; 
+byte sonuc = 0 ; 
+byte ilkgenislik = 0 ; 
+byte genislik = 0 ;
+
+byte tespitler[5] = {0,1,2,3,4};
+//int yoklama [5] = {5,6,7,8,9};
+
+byte maxRadar =  0 ; 
+
+void setup() {
+pinMode(led_kirmizi1,OUTPUT);
+pinMode(led_kirmizi2,OUTPUT);
+pinMode(led_mavi1,OUTPUT);
+pinMode(led_mavi2,OUTPUT);
+pinMode(buzzer,OUTPUT);
+
+
+
+servo1.attach(11);
+pinMode(echo,INPUT);
+pinMode(trig,OUTPUT);
+Serial.begin(9600);
+}
+
+void loop() {
+
+
+  
+ digitalWrite(trig,HIGH);
+ delayMicroseconds(20);
+ digitalWrite(trig,LOW);
+ sure=pulseIn(echo,HIGH);
+ mesafe=(sure/2)/29.1;
+ //Serial.println(mesafe);
+ delay(10);
+
+
+  
+
+  for (byte i = 0 ; i <= 180 ; i++){
+    
+    servo1.write(i);
+    digitalWrite(trig,HIGH);
+ delayMicroseconds(20);
+ digitalWrite(trig,LOW);
+ sure=pulseIn(echo,HIGH);
+ mesafe=(sure/2)/29.1;
+
+ Serial.println(mesafe);
+  //Serial.print("SONUC = "+sonuc);
+
+digitalWrite(led_mavi2, HIGH);
+    delay(40);
+    digitalWrite(led_mavi2, LOW);
+    
+
+ 
+ oncekiMesafe = i ; 
+
+    if(mesafe < 20 ){
+
+      
+if(sonuc > 10  && sonuc < 15){
+  ilkgenislik = tut ; 
+}
+    genislik = tut;
+
+    sonuc++;
+      
+     tut = i ;  
+
+     yakinlik = mesafe;
+
+     digitalWrite(led_kirmizi1,HIGH);
+
+    
+   
+    
+    }
+
+ digitalWrite(led_kirmizi1,LOW);
+
+    
+   
+
+    
+   
+    
+    
+
+   /* for(int k = 0 ; k < 5 ; k++){
+
+      servo1.write(tespitler[k]);
+      digitalWrite(buzzer,HIGH);
+      delay(500);
+      digitalWrite(buzzer,LOW);
+      delay(500);
+    }*/
+}
+servo1.write((ilkgenislik+genislik)/2);
+delay(100000);
+
+
+}
